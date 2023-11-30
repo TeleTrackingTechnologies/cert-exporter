@@ -60,7 +60,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          registry: docker.teledev.io
           tags: "latest"
           labels: ${{ steps.meta.outputs.labels }}
           
