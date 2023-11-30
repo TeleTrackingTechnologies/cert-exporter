@@ -66,10 +66,6 @@ jobs:
 
       - name: Push Docker image
         uses: docker/build-push-action@v4
+        uses: docker/push-action@v3
         with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: "latest"
-          labels: ${{ steps.meta.outputs.labels }}
-          image: ${{ steps.build.outputs.DOCKER_IMAGE_ID }}
+          image: docker.teledev.io/cert-exporter:latest
