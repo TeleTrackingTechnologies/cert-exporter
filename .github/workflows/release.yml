@@ -63,6 +63,6 @@ jobs:
           tags: [
             ${{ steps.chart-releaser.outputs.chart_version }},
             "latest"
-            ]
+          ]
           labels: ${{ steps.meta.outputs.labels }}
           
