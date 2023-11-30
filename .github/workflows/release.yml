@@ -35,7 +35,6 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Run chart-releaser
-        id: chart-releaser
         uses: helm/chart-releaser-action@v1.0.0
         with:
           charts_dir: helm
@@ -61,6 +60,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.chart-releaser.outputs.chart_version }}
+          tags: "latest"
           labels: ${{ steps.meta.outputs.labels }}
           
