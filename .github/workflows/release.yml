@@ -41,7 +41,6 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.TELECI_GITHUB_TOKEN }}"
 
-
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
@@ -65,16 +64,12 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASS }}
 
-
-    - name: Push Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        platforms: linux/amd64,linux/arm64
-        push: true
-        tags: "latest"
-        labels: ${{ steps.meta.outputs.labels }}
-        image: ${{ steps.build.outputs.DOCKER_IMAGE_ID }}
-
-      
-          
+      - name: Push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: "latest"
+          labels: ${{ steps.meta.outputs.labels }}
+          image: ${{ steps.build.outputs.DOCKER_IMAGE_ID }}
