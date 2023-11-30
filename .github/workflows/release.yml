@@ -60,9 +60,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: [
-            ${{ steps.chart-releaser.outputs.chart_version }},
-            "latest"
-          ]
+          tags: ${{ steps.chart-releaser.outputs.chart_version }}
           labels: ${{ steps.meta.outputs.labels }}
           
