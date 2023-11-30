@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - OB-32_2
     tags:
       - v*
 
@@ -43,7 +44,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build . -t docker.teledev.io/cert-exporter:${{ steps.chart-releaser.outputs.chart_version }} -t docker.teledev.io/cert-exporter:latest
+          docker build . -t docker.teledev.io/cert-exporter:${{ steps.chart-releaser.outputs.chart_version }} -t docker.teledev.io/cert-exporter:cert-exporter-latest
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
