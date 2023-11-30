@@ -48,13 +48,12 @@ jobs:
           images: docker.teledev.io/cert-exporter
 
       - name: Build Docker image
-        id: build
         uses: docker/build-push-action@v4
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: false
-          tags: "latest"
+          load: true
+          tags: docker.teledev.io/cert-exporter:latest
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Log in to Docker Hub
@@ -65,6 +64,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASS }}
 
       - name: Push Docker image
-        uses: docker/push-action@v3
+        uses: docker/build-push-action@v4
         with:
-          image: docker.teledev.io/cert-exporter:latest
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: docker.teledev.io/cert-exporter:latest
+          labels: ${{ steps.meta.outputs.labels }}
