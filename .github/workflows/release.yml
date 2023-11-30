@@ -65,7 +65,6 @@ jobs:
           password: ${{ secrets.DOCKER_PASS }}
 
       - name: Push Docker image
-        uses: docker/build-push-action@v4
         uses: docker/push-action@v3
         with:
           image: docker.teledev.io/cert-exporter:latest
