@@ -34,25 +34,32 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
-        id: chart-releaser
-        with:
-          charts_dir: helm
-        env:
-          CR_TOKEN: "${{ secrets.TELECI_GITHUB_TOKEN }}"
-
-      - name: Build Docker image
+      - name: Bump Version
         run: |
-          docker build . -t docker.teledev.io/cert-exporter:${{ steps.chart-releaser.outputs.chart_version }} -t docker.teledev.io/cert-exporter:cert-exporter-latest
+          pip install semversioner==0.6.16
+          export PATH="$HOME/.local/bin:$PATH"
+          ./ci-scripts/bump-version.sh
 
-      - name: Log in to Docker Hub
+      - name: Build images
+        run: |
+          ./ci-scripts/docker-build.sh
+          ./ci-scripts/git-tag.sh
+
+      - name: Log in to Docker registry
         uses: docker/login-action@v2
         with:
           registry: docker.teledev.io
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASS }}
-
-      - name: Push Docker image
+      
+      - name: Push Images
         run: |
-          docker push docker.teledev.io/cert-exporter --all-tags
+          ./ci-scripts/release.sh
+      
+      - name: Push changes
+        if: "contains(github.ref, 'master')"
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.TELECI_GITHUB_TOKEN }}
+          branch: master
+          tags: true
