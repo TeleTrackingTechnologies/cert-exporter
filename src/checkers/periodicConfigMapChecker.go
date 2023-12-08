@@ -113,7 +113,7 @@ func (p *PeriodicConfigMapChecker) StartChecking() {
 			}
 			glog.Infof("Annotations matched. Parsing configMap.")
 
-			for name, data := range configMap.BinaryData {
+			for name, data := range configMap.Data {
 				include, exclude = false, false
 
 				for _, glob := range p.includeConfigMapsDataGlobs {
