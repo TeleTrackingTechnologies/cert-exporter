@@ -181,14 +181,14 @@ func (p *PeriodicSecretChecker) StartChecking() {
 					// Try to get password from same secret assuming "password" as key - JITBundleSecret
 					password, err := getPasswordFromSecret(client, secret.Namespace, secret.Name, "password")
 					if err != nil {
-						glog.Infof("Password not present within secret")
+						glog.Infof("Password not present within secret %v", secret.Name)
 					}
 
 					// Try to get password from another secret with name secret-name-password and "key.password" as key - Generic JIT
 					if password == "" {
 						password, err = getPasswordFromSecret(client, secret.Namespace, secret.Name+"-password", strings.Split(name, ".")[0]+".password")
 						if err != nil {
-							glog.Infof("Password not present in expected secret")
+							glog.Infof("Password not present in expected secret for secret %v", secret.Name)
 						}
 					}
 

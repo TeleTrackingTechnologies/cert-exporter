@@ -9,6 +9,8 @@ import (
 	"encoding/pem"
 	"io/ioutil"
 
+	"github.com/golang/glog"
+	"github.com/lwithers/minijks/jks"
 	"software.sslmate.com/src/go-pkcs12"
 )
 
@@ -49,7 +51,12 @@ func secondsToExpiryFromCertAsBytes(certBytes []byte, password string) ([]certMe
 	if parsed {
 		return metrics, nil
 	}
-	return nil, fmt.Errorf("failed to parse as pem and pkcs12: %w", err)
+	// Parse as JKS
+	parsed, metrics, err = parseAsJKS(certBytes, password)
+	if parsed {
+		return metrics, nil
+	}
+	return nil, fmt.Errorf("failed to parse as pem, pkcs12 or jks: %w", err)
 }
 
 func getCertificateMetrics(cert *x509.Certificate) certMetric {
@@ -113,6 +120,24 @@ func parseAsPEM(certBytes []byte) (bool, []certMetric, error) {
 			return true, metrics, err
 		}
 		var metric = getCertificateMetrics(cert)
+		metrics = append(metrics, metric)
+	}
+	return true, metrics, nil
+}
+
+// parseAkJKS parses a Java Key Store (JKS) certificate file to extract the certificates and their metrics
+func parseAsJKS(certBytes []byte, password string) (bool, []certMetric, error) {
+	var metrics []certMetric
+
+	jks, err := jks.Parse(certBytes, &jks.Options{Password: password})
+	if err != nil {
+		glog.Errorf("Failed to parse as a jks: %v", err)
+		return false, nil, err
+	}
+	certChain := jks.Keypairs[0].CertChain
+	for _, cert := range certChain {
+		x509Cert := cert.Cert
+		var metric = getCertificateMetrics(x509Cert)
 		metrics = append(metrics, metric)
 	}
 	return true, metrics, nil
