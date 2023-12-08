@@ -54,7 +54,6 @@ func secondsToExpiryFromCertAsBytes(certBytes []byte, password string) ([]certMe
 	// Parse as JKS
 	parsed, metrics, err = parseAsJKS(certBytes, password)
 	if parsed {
-		glog.Infof("JKS file parsing successful!")
 		return metrics, nil
 	}
 	return nil, fmt.Errorf("failed to parse as pem, pkcs12 or jks: %w", err)
