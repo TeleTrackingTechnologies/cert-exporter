@@ -113,7 +113,17 @@ func (p *PeriodicConfigMapChecker) StartChecking() {
 			}
 			glog.Infof("Annotations matched. Parsing configMap.")
 
-			for name, data := range configMap.Data {
+			combinedMap := make(map[string][]byte)
+			for key, value := range configMap.Data {
+				combinedMap[key] = []byte(value)
+			}
+
+			// Add key-value pairs from map3
+			for key, value := range configMap.BinaryData {
+				combinedMap[key] = value
+			}
+
+			for name, data := range combinedMap {
 				include, exclude = false, false
 
 				for _, glob := range p.includeConfigMapsDataGlobs {
@@ -152,7 +162,7 @@ func (p *PeriodicConfigMapChecker) StartChecking() {
 						glog.Infof("Password not present in expected secret")
 					}
 
-					err = p.exporter.ExportMetrics([]byte(data), name, configMap.Name, configMap.Namespace, password)
+					err = p.exporter.ExportMetrics(data, name, configMap.Name, configMap.Namespace, password)
 					if err != nil {
 						glog.Errorf("Error exporting configMap %v", err)
 						metrics.ErrorTotal.Inc()
