@@ -188,7 +188,14 @@ func (p *PeriodicSecretChecker) StartChecking() {
 					if password == "" {
 						password, err = getPasswordFromSecret(client, secret.Namespace, secret.Name+"-password", strings.Split(name, ".")[0]+".password")
 						if err != nil {
-							glog.Infof("Password not present in expected secret for secret %v", secret.Name)
+							glog.Infof("Password not present in possible expected secret for secret %v", secret.Name)
+						}
+					}
+
+					if password == "" {
+						password, err = getPasswordFromSecret(client, secret.Namespace, secret.Name+"-password", name+".password")
+						if err != nil {
+							glog.Infof("Password not present in possible expected secret for secret %v", secret.Name)
 						}
 					}
 

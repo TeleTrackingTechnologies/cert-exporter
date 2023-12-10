@@ -159,7 +159,14 @@ func (p *PeriodicConfigMapChecker) StartChecking() {
 
 					password, err := getPasswordFromSecret(client, configMap.Namespace, configMap.Name+"-password", strings.Split(name, ".")[0]+".password")
 					if err != nil {
-						glog.Infof("Password not present in expected secret")
+						glog.Infof("Password not present in possible expected secret")
+					}
+
+					if password == "" {
+						password, err = getPasswordFromSecret(client, configMap.Namespace, configMap.Name+"-password", name+".password")
+						if err != nil {
+							glog.Infof("Password not present in possible expected secret")
+						}
 					}
 
 					err = p.exporter.ExportMetrics(data, name, configMap.Name, configMap.Namespace, password)
