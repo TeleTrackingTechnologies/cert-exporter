@@ -1,0 +1,6 @@
+[
+  {
+    "description": "Fix looping over binaryData in configmap",
+    "type": "patch"
+  }
+]

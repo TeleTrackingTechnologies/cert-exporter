@@ -15,6 +15,9 @@ release-snapshot: $(GORELEASER)
 release: $(GORELEASER)
 	$(GORELEASER) release --rm-dist
 
+version:
+	docker run --rm --workdir=$(shell pwd) -v `pwd`:/`pwd` -it teletracking/versioner:latest add_change
+	
 clean:
 	rm -rf dist
 
