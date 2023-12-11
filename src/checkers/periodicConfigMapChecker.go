@@ -118,7 +118,6 @@ func (p *PeriodicConfigMapChecker) StartChecking() {
 				combinedMap[key] = []byte(value)
 			}
 
-			// Add key-value pairs from map3
 			for key, value := range configMap.BinaryData {
 				combinedMap[key] = value
 			}
