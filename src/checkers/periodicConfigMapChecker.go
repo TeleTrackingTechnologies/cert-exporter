@@ -2,6 +2,7 @@ package checkers
 
 import (
 	"context"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -156,7 +157,8 @@ func (p *PeriodicConfigMapChecker) StartChecking() {
 
 					// Try to get password from a secret with name secret-name-password and "key.password" as key
 
-					password, err := getPasswordFromSecret(client, configMap.Namespace, configMap.Name+"-password", strings.Split(name, ".")[0]+".password")
+					passwordKey := strings.TrimSuffix(name, path.Ext(name)) + ".password"
+					password, err := getPasswordFromSecret(client, configMap.Namespace, configMap.Name+"-password", passwordKey)
 					if err != nil {
 						glog.Infof("Password not present in possible expected secret")
 					}

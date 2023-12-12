@@ -3,6 +3,7 @@ package checkers
 import (
 	"context"
 	"errors"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -185,8 +186,9 @@ func (p *PeriodicSecretChecker) StartChecking() {
 					}
 
 					// Try to get password from another secret with name secret-name-password and "key.password" as key - Generic JIT
+					passwordKey := strings.TrimSuffix(name, path.Ext(name)) + ".password"
 					if password == "" {
-						password, err = getPasswordFromSecret(client, secret.Namespace, secret.Name+"-password", strings.Split(name, ".")[0]+".password")
+						password, err = getPasswordFromSecret(client, secret.Namespace, secret.Name+"-password", passwordKey)
 						if err != nil {
 							glog.Infof("Password not present in possible expected secret for secret %v", secret.Name)
 						}
