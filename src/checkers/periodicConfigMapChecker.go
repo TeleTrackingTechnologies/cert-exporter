@@ -2,6 +2,7 @@ package checkers
 
 import (
 	"context"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -113,7 +114,16 @@ func (p *PeriodicConfigMapChecker) StartChecking() {
 			}
 			glog.Infof("Annotations matched. Parsing configMap.")
 
-			for name, data := range configMap.Data {
+			combinedMap := make(map[string][]byte)
+			for key, value := range configMap.Data {
+				combinedMap[key] = []byte(value)
+			}
+
+			for key, value := range configMap.BinaryData {
+				combinedMap[key] = value
+			}
+
+			for name, data := range combinedMap {
 				include, exclude = false, false
 
 				for _, glob := range p.includeConfigMapsDataGlobs {
@@ -147,12 +157,20 @@ func (p *PeriodicConfigMapChecker) StartChecking() {
 
 					// Try to get password from a secret with name secret-name-password and "key.password" as key
 
-					password, err := getPasswordFromSecret(client, configMap.Namespace, configMap.Name+"-password", strings.Split(name, ".")[0]+".password")
+					passwordKey := strings.TrimSuffix(name, path.Ext(name)) + ".password"
+					password, err := getPasswordFromSecret(client, configMap.Namespace, configMap.Name+"-password", passwordKey)
 					if err != nil {
-						glog.Infof("Password not present in expected secret")
+						glog.Infof("Password not present in possible expected secret")
 					}
 
-					err = p.exporter.ExportMetrics([]byte(data), name, configMap.Name, configMap.Namespace, password)
+					if password == "" {
+						password, err = getPasswordFromSecret(client, configMap.Namespace, configMap.Name+"-password", name+".password")
+						if err != nil {
+							glog.Infof("Password not present in possible expected secret")
+						}
+					}
+
+					err = p.exporter.ExportMetrics(data, name, configMap.Name, configMap.Namespace, password)
 					if err != nil {
 						glog.Errorf("Error exporting configMap %v", err)
 						metrics.ErrorTotal.Inc()
