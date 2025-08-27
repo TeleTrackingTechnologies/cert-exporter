@@ -93,7 +93,7 @@ var (
 			Name:      "configmap_expires_in_seconds",
 			Help:      "Number of seconds til the cert in the configmap expires.",
 		},
-		[]string{"key_name", "issuer", "cn", "configmap_name", "configmap_namespace"},
+		[]string{"key_name", "issuer", "cn", "configmap_name", "configmap_namespace", "serviceline"},
 	)
 
 	// ConfigMapNotAfterTimestamp is a prometheus gauge that indicates the NotAfter timestamp.
@@ -103,7 +103,7 @@ var (
 			Name:      "configmap_not_after_timestamp",
 			Help:      "Expiration timestamp for cert in the configmap.",
 		},
-		[]string{"key_name", "issuer", "cn", "configmap_name", "configmap_namespace"},
+		[]string{"key_name", "issuer", "cn", "configmap_name", "configmap_namespace", "serviceline"},
 	)
 
 	// WebhookExpirySeconds is a prometheus gauge that indicates the number of seconds until a kubernetes webhook certificate expires

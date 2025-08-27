@@ -170,7 +170,7 @@ func (p *PeriodicConfigMapChecker) StartChecking() {
 						}
 					}
 
-					err = p.exporter.ExportMetrics(data, name, configMap.Name, configMap.Namespace, password)
+					err = p.exporter.ExportMetrics(data, name, configMap.Name, configMap.Namespace, password, configMap.GetLabels())
 					if err != nil {
 						glog.Errorf("Error exporting configMap %v", err)
 						metrics.ErrorTotal.Inc()
