@@ -1,0 +1,4 @@
+{
+  "type": "patch",
+  "description": "export serviceline label for configmaps"
+}

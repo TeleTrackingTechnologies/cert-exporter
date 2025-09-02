@@ -115,7 +115,7 @@ $CERT_EXPORTER_PATH \
 pid=$!
 sleep 10
 
-validateMetrics 'cert_exporter_configmap_expires_in_seconds{cn="hms-test",configmap_name="test",configmap_namespace="default",issuer="hms-test",key_name="test.crt"}'
+validateMetrics 'cert_exporter_configmap_expires_in_seconds{cn="hms-test",configmap_name="test",configmap_namespace="default",issuer="hms-test",key_name="test.crt",serviceline="test"}'
 
 # kill exporter
 echo "** Killing $pid"
