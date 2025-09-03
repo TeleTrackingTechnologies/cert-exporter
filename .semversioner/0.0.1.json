@@ -1,0 +1,14 @@
+[
+  {
+    "description": "Add binaryData monitoring to configmap",
+    "type": "patch"
+  },
+  {
+    "description": "fix semversioner by updating binary version to 0.9.0",
+    "type": "patch"
+  },
+  {
+    "description": "export serviceline label for configmaps",
+    "type": "patch"
+  }
+]

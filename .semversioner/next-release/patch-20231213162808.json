@@ -1,4 +1,0 @@
-{
-  "type": "patch",
-  "description": "Add binaryData monitoring to configmap"
-}
