@@ -35,7 +35,7 @@ jobs:
 
       - name: Bump Version
         run: |
-          pip install semversioner==0.6.16
+          pip install semversioner==0.9.0
           export PATH="$HOME/.local/bin:$PATH"
           ./ci-scripts/bump-version.sh
 
@@ -50,11 +50,11 @@ jobs:
           registry: docker.teledev.io
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASS }}
-      
+
       - name: Push Images
         run: |
           ./ci-scripts/release.sh
-      
+
       - name: Push changes
         if: "contains(github.ref, 'master')"
         uses: ad-m/github-push-action@master
